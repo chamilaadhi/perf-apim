@@ -182,8 +182,6 @@ if [ ! -z $application_id ] && [ ! $application_id = "null" ]; then
     echo "Found application id for \"PerformanceTestAPP\": $application_id"
 else
     echo "Creating \"PerformanceTestAPP\" application"
-    echo $($curl_command -X POST -H "Authorization: Bearer $subscribe_access_token" -H "Content-Type: application/json" -d "$(app_request)" "${base_https_url}/api/am/store/v1.0/applications")
-
     application_id=$($curl_command -X POST -H "Authorization: Bearer $app_access_token" -H "Content-Type: application/json" -d "$(app_request)" "${base_https_url}/api/am/store/v1.0/applications" | jq -r '.applicationId')
     if [ ! -z $application_id ] && [ ! $application_id = "null" ]; then
         echo "Found application id for \"PerformanceTestAPP\": $application_id"
@@ -353,7 +351,7 @@ create_api() {
         return
     fi
     echo "Publishing $api_name API"
-    local publish_api_status=$($curl_command -w "%{http_code}" -H "Authorization: Bearer $publish_access_token" -X POST "${base_https_url}/api/am/publisher/v1.0/apis/change-lifecycle?action=Publish&apiId=${api_id}")
+    local publish_api_status=$($curl_command -w "%{http_code}" -o /dev/null -H "Authorization: Bearer $publish_access_token" -X POST "${base_https_url}/api/am/publisher/v1.0/apis/change-lifecycle?action=Publish&apiId=${api_id}")
     if [ $publish_api_status -eq 200 ]; then
         echo "$api_name API Published!"
         echo -ne "\n"
@@ -391,8 +389,6 @@ create_api() {
         n=0
         until [ $n -ge 50 ]; do
             sleep 10
-            echo "__-"
-            echo $api_details
             local updated_api="$($curl_command -H "Authorization: Bearer $create_access_token" -H "Content-Type: application/json" -X PUT -d "$api_details" "${base_https_url}/api/am/publisher/v1.0/apis/${api_id}")"
             local updated_api_id=$(echo "$updated_api" | jq -r '.id')
             if [ ! -z $updated_api_id ] && [ ! $updated_api_id = "null" ]; then
