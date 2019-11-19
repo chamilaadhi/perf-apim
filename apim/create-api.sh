@@ -362,7 +362,7 @@ create_api() {
     fi
     if [ ! -z "$out_sequence" ]; then
         echo "Adding mediation policy to $api_name API"
-        local sequence_id=$($curl_command -H "Authorization: Bearer $mediation_policy_create_token" -F type=out -F mediationPolicyFile=@payload/mediation-api-sequence.xml "${base_https_url}/api/am/publisher/v1.0/apis/${api_id}/mediation-policies" | jq -r '.id')
+        local sequence_id=$($curl_command -H "Authorization: Bearer $mediation_policy_create_token" -F type=out -F mediationPolicyFile=@../apim/payload/mediation-api-sequence.xml "${base_https_url}/api/am/publisher/v1.0/apis/${api_id}/mediation-policies" | jq -r '.id')
         if [ ! -z $sequence_id ] && [ ! $sequence_id = "null" ]; then
             echo "Mediation policy added to $api_name API with ID $sequence_id"
             echo -ne "\n"
