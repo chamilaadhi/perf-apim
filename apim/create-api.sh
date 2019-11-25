@@ -239,7 +239,8 @@ fi
 #Write consumer key to file
 mkdir -p "$script_dir/target"
 echo $consumer_key >"$script_dir/target/consumer_key"
-
+#Write application id to file
+echo $application_id >"$script_dir/target/application_id"
 echo -ne "\n"
 
 # Create APIs
